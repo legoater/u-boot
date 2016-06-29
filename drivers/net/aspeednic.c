@@ -1140,7 +1140,6 @@ static int aspeednic_init(struct eth_device* dev, bd_t* bis)
 	aspeednic_probe_phy(dev);
 
 	aspeednic_write_hwaddr(dev);
-	set_mac_control_register(dev);
 
 	for (i = 0; i < NUM_RX_DESC; i++) {
 		rx_ring[i].status = cpu_to_le32(RXPKT_RDY);
@@ -1165,6 +1164,7 @@ static int aspeednic_init(struct eth_device* dev, bd_t* bis)
 	OUTL(dev, ((u32) &rx_ring), RXR_BADR_REG);
 	OUTL(dev, RX_BUFF_SZ, RBSR_REG);
 
+	set_mac_control_register(dev);
 	START_MAC(dev);
 
 	tx_new = 0;
