@@ -20,6 +20,7 @@
 
 
 #define CONFIG_ARCH_CPU_INIT
+#define CONFIG_MISC_INIT_R
 #define CONFIG_MACH_TYPE		MACH_TYPE_ASPEED
 
 #include <asm/arch/platform.h>

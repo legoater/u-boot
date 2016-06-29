@@ -7,7 +7,10 @@
 
 #include <common.h>
 #include <netdev.h>
+#include <asm/arch/platform.h>
 #include <asm/arch/ast-sdmc.h>
+#include <asm/arch/regs-ahbc.h>
+#include <asm/arch/regs-scu.h>
 #include <asm/io.h>
 
 DECLARE_GLOBAL_DATA_PTR;
@@ -36,14 +39,14 @@ int misc_init_r(void)
 	u32 reg;
 
 	/* Unlock AHB controller */
-	writel(0xAEED1A03, 0x1E600000);
+	writel(AHBC_PROTECT_UNLOCK, AST_AHBC_BASE);
 
 	/* Map DRAM to 0x00000000 */
-	reg = readl(0x1E60008C);
-	writel(reg | BIT(0), 0x1E60008C);
+	reg = readl(AST_AHBC_BASE + AST_AHBC_ADDR_REMAP);
+	writel(reg | BIT(0), AST_AHBC_BASE + AST_AHBC_ADDR_REMAP);
 
 	/* Unlock SCU */
-	writel(0x1688A8A8, 0x1e6e2000);
+	writel(SCU_PROTECT_UNLOCK, AST_SCU_BASE);
 
 	/*
 	 * The original file contained these comments.
@@ -53,10 +56,10 @@ int misc_init_r(void)
 	 * PCLK  = HPLL/8
 	 * BHCLK = HPLL/8
 	 */
-	reg = readl(0x1e6e2008);
+	reg = readl(AST_SCU_BASE + AST_SCU_CLK_SEL);
 	reg &= 0x1c0fffff;
 	reg |= 0x61800000;
-	writel(reg, 0x1e6e2008);
+	writel(reg, AST_SCU_BASE + AST_SCU_CLK_SEL);
 
 	return 0;
 }
