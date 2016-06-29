@@ -37,7 +37,7 @@ static ulong lastdec;
 int timer_init (void)
 {
 	*(volatile ulong *)(AST_TIMER_BASE + 4)    = TIMER_LOAD_VAL;
-	*(volatile ulong *)(AST_TIMER_BASE + 0x30) = 0x3;		/* enable timer1 */
+	*(volatile ulong *)(AST_TIMER_BASE + 0x30) = 0x3; /* enable timer1 */
 
 	/* init the timestamp and lastdec value */
 	reset_timer_masked();
@@ -67,23 +67,23 @@ void set_timer (ulong t)
 /* delay x useconds AND perserve advance timstamp value */
 void __udelay (unsigned long usec)
 {
-  ulong last = READ_CLK;
-  ulong clks;
-  ulong elapsed = 0;
+	ulong last = READ_CLK;
+	ulong clks;
+	ulong elapsed = 0;
 
-  /* translate usec to clocks */
-  clks = (usec / 1000) * CLK_PER_HZ;
-  clks += (usec % 1000) * CLK_PER_HZ / 1000;
+	/* translate usec to clocks */
+	clks = (usec / 1000) * CLK_PER_HZ;
+	clks += (usec % 1000) * CLK_PER_HZ / 1000;
 
-  while (clks > elapsed) {
-    ulong now = READ_CLK;
-    if (now <= last) {
-      elapsed += last - now;
-    } else {
-      elapsed += TIMER_LOAD_VAL - (now - last);
-    }
-    last = now;
-  }
+	while (clks > elapsed) {
+		ulong now = READ_CLK;
+		if (now <= last) {
+			elapsed += last - now;
+		} else {
+			elapsed += TIMER_LOAD_VAL - (now - last);
+		}
+		last = now;
+	}
 }
 
 void reset_timer_masked (void)
@@ -95,16 +95,18 @@ void reset_timer_masked (void)
 
 ulong get_timer_masked (void)
 {
-	ulong now = READ_TIMER;		/* current tick value */
+	ulong now = READ_TIMER;	/* current tick value */
 
-	if (lastdec >= now) {		/* normal mode (non roll) */
-		/* normal mode */
-		timestamp += lastdec - now; /* move stamp fordward with absoulte diff ticks */
-	} else {			/* we have overflow of the count down timer */
+	if (lastdec >= now) {	/* normal mode (non roll) */
+		 /* move stamp fordward with absolute diff ticks */
+		timestamp += lastdec - now;
+	} else { /* we have overflow of the count down timer */
+
 		/* nts = ts + ld + (TLV - now)
 		 * ts=old stamp, ld=time that passed before passing through -1
 		 * (TLV-now) amount of time after passing though -1
-		 * nts = new "advancing time stamp"...it could also roll and cause problems.
+		 * nts = new "advancing time stamp"... it could also roll and
+		 * cause problems.
 		 */
 		timestamp += lastdec + (TIMER_LOAD_VAL / CLK_PER_HZ) - now;
 	}
