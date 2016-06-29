@@ -755,6 +755,7 @@ config TARGET_WITHERSPOON_BMC
 
 config TARGET_AST_G4
        bool "Support ast2400"
+       select CPU_ARM926EJS
 
 endchoice
 
