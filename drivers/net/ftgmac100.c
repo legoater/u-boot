@@ -747,14 +747,13 @@ int ftgmac100_initialize(bd_t *bd)
 
 #if 1   //Ryan Chen for more mac use
 	int i, card_number = 0, mac_no;
-	unsigned int			iobase[CONFIG_MAC_NUM];
+	unsigned int iobase[2] = { AST_MAC0_BASE, AST_MAC1_BASE };
 
-	mac_no = CONFIG_MAC_NUM;
-	iobase[0] = AST_MAC0_BASE;
-
-#ifdef AST_MAC1_BASE
-	iobase[1] = AST_MAC1_BASE;
+	mac_no = 1;
+#ifdef CONFIG_HAS_ETH1
+	mac_no++;
 #endif
+
 	for (i = 0; i < mac_no; i++)
 	{
 		ast_scu_multi_func_eth(i);

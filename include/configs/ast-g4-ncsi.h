@@ -18,5 +18,9 @@
 #include <asm/arch/ast2400_platform.h>
 #include <configs/ast-common.h>
 
+/* Ethernet */
+#define CONFIG_HAS_ETH0
+#define CONFIG_HAS_ETH1
+
 
 #endif	/* __AST_G4_NCSI_CONFIG_H */

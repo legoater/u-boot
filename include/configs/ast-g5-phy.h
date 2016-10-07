@@ -20,7 +20,8 @@
 #define CONFIG_SYS_UBOOT_BASE		CONFIG_SYS_TEXT_BASE
 
 /* Ethernet */
-#define CONFIG_MAC_NUM			2
+#define CONFIG_HAS_ETH0
+#define CONFIG_HAS_ETH1
 #define CONFIG_PHY_MAX_ADDR		32
 
 /* platform.S */
