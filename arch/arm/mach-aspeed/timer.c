@@ -20,12 +20,12 @@
 
 #include <common.h>
 
-#if CONFIG_ASPEED_TIMER_CLK < CONFIG_SYS_HZ
-#error "CONFIG_ASPEED_TIMER_CLK must be as large as CONFIG_SYS_HZ"
+#if CONFIG_TIMER_CLK_FREQ < CONFIG_SYS_HZ
+#error "CONFIG_TIMER_CLK_FREQ must be as large as CONFIG_SYS_HZ"
 #endif
 
 #define TIMER_LOAD_VAL 0xffffffff
-#define CLK_PER_HZ (CONFIG_ASPEED_TIMER_CLK / CONFIG_SYS_HZ)
+#define CLK_PER_HZ (CONFIG_TIMER_CLK_FREQ / CONFIG_SYS_HZ)
 
 /* macro to read the 32 bit timer */
 #define READ_CLK (*(volatile ulong *)(AST_TIMER_BASE + 0))

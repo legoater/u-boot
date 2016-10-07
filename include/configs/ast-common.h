@@ -43,7 +43,7 @@
 
 #define CONFIG_SYS_MALLOC_LEN   	(0x1000 + 4*1024*1024) /* malloc() len */
 
-#define CONFIG_ASPEED_TIMER_CLK		(1*1000*1000)	/* use external clk (1M) */
+#define CONFIG_TIMER_CLK_FREQ		(1*1000*1000)	/* use external clk (1M) */
 
 /*
  * NS16550 Configuration
