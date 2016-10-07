@@ -130,6 +130,9 @@ choice
 	prompt "Target select"
 	default TARGET_HIKEY
 
+config ARCH_ASPEED
+       bool "Support Apseed SoCs"
+
 config ARCH_AT91
 	bool "Atmel AT91"
 
@@ -899,17 +902,9 @@ config TARGET_THUNDERX_88XX
 	select OF_CONTROL
 	select SYS_CACHE_SHIFT_7
 
-config TARGET_AST_G5
-       bool "Support Apseed fifth generation SoCs"
-       select CPU_ARM1176
-       select AST_SPI_NOR
-
-config TARGET_AST_G4
-       bool "Support Aspeed fourth generation SoCs"
-       select CPU_ARM926EJS
-       select AST_SPI_NOR
-
 endchoice
+
+source "arch/arm/mach-aspeed/Kconfig"
 
 source "arch/arm/mach-at91/Kconfig"
 
@@ -1050,7 +1045,6 @@ source "board/vscom/baltos/Kconfig"
 source "board/woodburn/Kconfig"
 source "board/work-microwave/work_92105/Kconfig"
 source "board/zipitz2/Kconfig"
-source "board/aspeed/Kconfig"
 
 source "arch/arm/Kconfig.debug"
 
