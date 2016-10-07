@@ -27,17 +27,30 @@
 #define TIMER_LOAD_VAL 0xffffffff
 #define CLK_PER_HZ (CONFIG_TIMER_CLK_FREQ / CONFIG_SYS_HZ)
 
+/* Clock selection for Timer/Counter #1
+ * Counter is base on the selected clock to count down
+ *
+ * 0: APB clock (PCLK)
+ * 1: External clock (1 MHz)
+ */
+#define TIMER_CLK_SELECT	0x2
+/* Timer enable for Timer/Counter #1 */
+#define TIMER_ENABLE		0x1
+
 /* macro to read the 32 bit timer */
 #define READ_CLK (*(volatile ulong *)(AST_TIMER_BASE + 0))
 #define READ_TIMER (READ_CLK / CLK_PER_HZ)
 
-static ulong timestamp;
-static ulong lastdec;
+DECLARE_GLOBAL_DATA_PTR;
+
+#define timestamp	(gd->arch.tbl)
+#define lastdec		(gd->arch.lastinc)
 
 int timer_init (void)
 {
 	*(volatile ulong *)(AST_TIMER_BASE + 4)    = TIMER_LOAD_VAL;
-	*(volatile ulong *)(AST_TIMER_BASE + 0x30) = 0x3; /* enable timer1 */
+	*(volatile ulong *)(AST_TIMER_BASE + 0x30) =
+		TIMER_ENABLE|TIMER_CLK_SELECT;
 
 	/* init the timestamp and lastdec value */
 	reset_timer_masked();
@@ -118,7 +131,7 @@ ulong get_timer_masked (void)
 /* waits specified delay value and resets timestamp */
 void udelay_masked (unsigned long usec)
 {
-  __udelay(usec);
+	__udelay(usec);
 }
 
 /*
