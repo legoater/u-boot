@@ -21,9 +21,7 @@
 
 /* Ethernet */
 #define CONFIG_MAC_NUM			2
-#define CONFIG_FTGMAC100
 #define CONFIG_PHY_MAX_ADDR		32
-#define CONFIG_FTGMAC100_EGIGA
 
 /* platform.S */
 #define	CONFIG_DRAM_ECC_SIZE		0x10000000

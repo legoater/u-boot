@@ -19,10 +19,6 @@
 /* arm1176/start.S */
 #define CONFIG_SYS_UBOOT_BASE		CONFIG_SYS_TEXT_BASE
 
-/* Ethernet */
-#define CONFIG_LIB_RAND
-#define CONFIG_ASPEEDNIC
-
 /* platform.S settings */
 #define	CONFIG_DRAM_ECC_SIZE		0x10000000
 

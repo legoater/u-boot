@@ -20,9 +20,7 @@
 
 /* Ethernet */
 #define CONFIG_MAC_NUM			2
-#define CONFIG_FTGMAC100
 #define CONFIG_PHY_MAX_ADDR		32
-#define CONFIG_FTGMAC100_EGIGA
 
 
 #endif	/* __AST_G4_NCSI_CONFIG_H */

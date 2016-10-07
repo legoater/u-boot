@@ -18,9 +18,5 @@
 #include <asm/arch/ast2400_platform.h>
 #include <configs/ast-common.h>
 
-/* Ethernet */
-#define CONFIG_LIB_RAND
-#define CONFIG_ASPEEDNIC
-
 
 #endif	/* __AST_G4_NCSI_CONFIG_H */

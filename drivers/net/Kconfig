@@ -199,10 +199,27 @@ config PIC32_ETH
 
 config ASPEEDNIC
 	bool "Aspeed ethernet support"
-	depends on MACH_ARM
+	depends on ARCH_ASPEED
 	select PHYLIB
 	help
 	  Network support for the Aspeed ast2400 and ast2500 series network
 	  devices including NC-SI support.
+
+config FTGMAC100
+	bool "Faraday's FTGMAC100 Gigabit SoC Ethernet"
+	select PHYLIB
+	select MII
+	help
+	  Support for Faraday's FTGMAC100 Gigabit SoC Ethernet
+
+config FTGMAC100_EGIGA
+	bool "Define this if FTGMAC100 is connected to gigabit PHY"
+	depends on FTGMAC100
+	help
+	  If your system has 10/100 PHY only, it might not occur wrong
+	  behavior. Because PHY usually return timeout or useless data
+	  when polling gigabit status and gigabit control registers.
+	  This behavior won't affect the correctness of 10/100 link
+	  speed update.
 
 endif # NETDEVICES
