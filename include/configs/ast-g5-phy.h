@@ -24,7 +24,4 @@
 #define CONFIG_HAS_ETH1
 #define CONFIG_PHY_MAX_ADDR		32
 
-/* platform.S */
-#define	CONFIG_DRAM_ECC_SIZE		0x10000000
-
 #endif	/* __AST_G5_PHY_CONFIG_H */

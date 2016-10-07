@@ -23,7 +23,4 @@
 #define CONFIG_HAS_ETH0
 #define CONFIG_HAS_ETH1
 
-/* platform.S settings */
-#define	CONFIG_DRAM_ECC_SIZE		0x10000000
-
 #endif	/* __AST_G5_NCSI_CONFIG_H */

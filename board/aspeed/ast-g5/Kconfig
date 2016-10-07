@@ -13,4 +13,13 @@ config SYS_CONFIG_NAME
 	default "ast-g5-phy" if ASPEED_NET_PHY
 	default "ast-g5-ncsi" if ASPEED_NET_NCSI
 
+config DRAM_ECC
+	bool "Enable ECC function"
+	default n
+	help
+	  Enable ECC function on Aspeed SoC AST2500
+
+config DRAM_ECC_SIZE
+	default 0x10000000
+
 endif
