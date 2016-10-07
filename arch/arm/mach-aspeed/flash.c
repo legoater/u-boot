@@ -1310,7 +1310,7 @@ unsigned long flash_init (void)
 
 	/* Init: FMC  */
 	/* BANK 0 : FMC CS0 , 1: FMC CS1, */
-	for (i = 0; i < CONFIG_FMC_CS; ++i) {
+	for (i = 0; i < CONFIG_SYS_MAX_FLASH_BANKS; ++i) {
 		flash_info[i].sysspi = 0;
 		flash_info[i].reg_base = AST_FMC_BASE;
 		flash_info[i].flash_id = FLASH_UNKNOWN;
@@ -1331,22 +1331,6 @@ unsigned long flash_init (void)
 				i, flash_info[i].size, flash_info[i].size << 20);
 		}
 	}
-
-	/* BANK 2:SYSSPI CS0 */
-#ifdef CONFIG_SPI0_CS
-	//pin switch by trap[13:12]	-- [0:1] Enable SPI Master
-	ast_scu_spi_master(1);	/* enable SPI master */
-	*((volatile ulong*) AST_FMC_SPI0_BASE) |= 0x10000;	/* enable Flash Write */
-	flash_info[CONFIG_FMC_CS].sysspi = 1;
-	flash_info[CONFIG_FMC_CS].reg_base = AST_FMC_SPI0_BASE;
-	flash_info[CONFIG_FMC_CS].flash_id = FLASH_UNKNOWN;
-	flash_info[CONFIG_FMC_CS].CE = 0;
-	size += flash_info[CONFIG_FMC_CS].size = flash_get_size(AST_SPI0_CS0_BASE, &flash_info[CONFIG_FMC_CS]);
-	if (flash_info[2].flash_id == FLASH_UNKNOWN) {
-		printf ("## Unknown FLASH on Bank 2 SYS SPI - Size = 0x%08lx = %ld MB\n",
-			flash_info[CONFIG_FMC_CS].size, flash_info[CONFIG_FMC_CS].size << 20);
-	}
-#endif
 
 	/* Monitor protection ON by default */
 #if (CONFIG_MONITOR_BASE >= AST_FMC_CS0_BASE)

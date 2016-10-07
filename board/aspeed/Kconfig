@@ -14,3 +14,9 @@ config ASPEED_NET_NCSI
 	bool  "Use a network controller attached via NSCI"
 
 endchoice
+
+config AST_SPI_NOR
+	bool "Enable Aspeed SMC driver"
+	help
+	  Enable Aspeed SMC driver to access the SPI NOR flash of the
+	  BMC

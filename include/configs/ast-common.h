@@ -86,9 +86,7 @@
 
 #define CONFIG_BOOTARGS			"console=ttyS4,115200n8 root=/dev/ram rw"
 
-#define CONFIG_AST_SPI_NOR    /* AST SPI NOR Flash */
-#define CONFIG_FMC_CS			1
-#define CONFIG_SYS_MAX_FLASH_BANKS 	(CONFIG_FMC_CS)
+#define CONFIG_SYS_MAX_FLASH_BANKS 	1
 #define CONFIG_SYS_MAX_FLASH_SECT	(8192)		/* max number of sectors on one chip */
 #define CONFIG_ENV_IS_IN_FLASH		1
 #define CONFIG_ENV_ADDR			(AST_FMC_CS0_BASE + 0x60000)
