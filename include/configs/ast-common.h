@@ -19,8 +19,6 @@
 #define CONFIG_ARCH_CPU_INIT
 #define CONFIG_MACH_TYPE		MACH_TYPE_ASPEED
 
-#include <asm/arch/platform.h>
-
 /* Misc CPU related */
 #define CONFIG_CMDLINE_TAG		/* enable passing of ATAGs */
 #define CONFIG_SETUP_MEMORY_TAGS

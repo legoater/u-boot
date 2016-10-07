@@ -29,7 +29,6 @@
 #include <asm/io.h>
 #include <asm/arch/regs-ahbc.h>
 #include <asm/arch/ast-ahbc.h>
-#include <asm/arch/aspeed.h>
 
 static inline u32 ast_ahbc_read(u32 reg)
 {
@@ -58,13 +57,13 @@ static inline void ast_ahbc_write(u32 val, u32 reg)
 
 void ast_ahbc_boot_remap(void)
 {
-#if ! defined(AST_SOC_G5)
+#if ! defined(CONFIG_TARGET_AST_G5)
 	ast_ahbc_write(ast_ahbc_read(AST_AHBC_ADDR_REMAP) |
 		       AHBC_BOOT_REMAP, AST_AHBC_ADDR_REMAP);
 #endif
 }
 
-#ifdef AST_SOC_G5
+#ifdef CONFIG_TARGET_AST_G5
 void ast_ahbc_peie_mapping(u8 enable)
 {
 	if (enable)

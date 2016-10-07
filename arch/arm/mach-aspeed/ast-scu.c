@@ -41,7 +41,6 @@
 #include <asm/arch/regs-scu.h>
 #include <asm/arch/ast_scu.h>
 #include <asm/arch/platform.h>
-#include <asm/arch/aspeed.h>
 
 /* #define ASPEED_SCU_LOCK */
 
@@ -105,7 +104,7 @@ static struct soc_id soc_map_table[] = {
 void ast_scu_init_eth(u8 num)
 {
 /* Set MAC delay Timing */
-#ifndef AST_SOC_G5
+#ifndef CONFIG_TARGET_AST_G5
 	/* AST2300 max clk to 125Mhz, AST2400 max clk to 198Mhz */
 
 	/* RGMII --> H-PLL/6 */
@@ -156,7 +155,7 @@ void ast_scu_init_eth(u8 num)
  */
 void ast_scu_spi_master(u8 mode)
 {
-#ifdef AST_SOC_G5
+#ifdef CONFIG_TARGET_AST_G5
 	switch (mode) {
 	case 0:
 		ast_scu_write(SCU_HW_STRAP_SPI_MODE_MASK, AST_SCU_REVISION_ID);
@@ -199,6 +198,10 @@ void ast_scu_spi_master(u8 mode)
 #endif
 }
 
+#define AST_PLL_25MHZ			25000000
+#define AST_PLL_24MHZ			24000000
+#define AST_PLL_12MHZ			12000000
+
 u32 ast_get_clk_source(void)
 {
 	if (ast_scu_read(AST_SCU_HW_STRAP1) & CLK_25M_IN)
@@ -207,7 +210,7 @@ u32 ast_get_clk_source(void)
 		return AST_PLL_24MHZ;
 }
 
-#if defined(AST_SOC_G5)
+#if defined(CONFIG_TARGET_AST_G5)
 
 u32 ast_get_h_pll_clk(void)
 {
@@ -250,7 +253,7 @@ u32 ast_get_ahbclk(void)
 	return ((hpll / axi_div) / ahb_div);
 }
 
-#else /* ! AST_SOC_G5 */
+#else /* ! CONFIG_TARGET_AST_G5 */
 
 u32 ast_get_h_pll_clk(void)
 {
@@ -316,12 +319,12 @@ u32 ast_get_ahbclk(void)
 	return (hpll / div);
 }
 
-#endif /* AST_SOC_G5 */
+#endif /* CONFIG_TARGET_AST_G5 */
 
 void ast_scu_show_system_info(void)
 {
 
-#ifdef AST_SOC_G5
+#ifdef CONFIG_TARGET_AST_G5
 	unsigned int axi_div, ahb_div, h_pll;
 
 	h_pll = ast_get_h_pll_clk();
@@ -366,7 +369,7 @@ void ast_scu_multi_func_eth(u8 num)
 				      AST_SCU_FUN_PIN_CTRL1);
 		}
 
-#ifdef AST_SOC_G5
+#ifdef CONFIG_TARGET_AST_G5
 		ast_scu_write(ast_scu_read(AST_SCU_FUN_PIN_CTRL1) |
 			      SCU_FUN_PIN_MAC0_PHY_LINK, AST_SCU_FUN_PIN_CTRL1);
 

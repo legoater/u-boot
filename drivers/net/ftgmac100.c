@@ -20,7 +20,6 @@
 #include <i2c.h>
 
 #include <asm/arch/ast_scu.h>
-#include <asm/arch/aspeed.h>
 
 #if defined(CONFIG_MII) || defined(CONFIG_CMD_MII)
 #include <miiphy.h>

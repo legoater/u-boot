@@ -30,7 +30,7 @@
 
 extern void ast_ahbc_boot_remap(void);
 
-#ifdef AST_SOC_G5
+#ifdef CONFIG_TARGET_AST_G5
 extern void ast_ahbc_lpc_plus_mapping(u8 enable);
 extern void ast_ahbc_peie_mapping(u8 enable);
 #endif

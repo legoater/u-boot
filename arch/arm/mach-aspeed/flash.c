@@ -31,7 +31,6 @@
 #include <environment.h>
 
 #include <asm/arch/ast_scu.h>
-#include <asm/arch/aspeed.h>
 
 
 /*
@@ -1277,7 +1276,7 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 		write_status_register(info, 0x40);	/* enable QE */
 
 	if (info->address32) {
-#ifndef AST_SOC_G5
+#ifndef CONFIG_TARGET_AST_G5
 		reg = *((volatile ulong*) 0x1e6e2070);	/* set H/W Trappings */
 		reg |= 0x10;
 		*((volatile ulong*) 0x1e6e2070) = reg;

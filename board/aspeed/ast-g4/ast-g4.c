@@ -8,7 +8,6 @@
 #include <common.h>
 #include <netdev.h>
 
-#include <asm/arch/platform.h>
 #include <asm/arch/ast-sdmc.h>
 #include <asm/arch/ast_scu.h>
 #include <asm/arch/regs-ahbc.h>

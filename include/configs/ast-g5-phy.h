@@ -11,9 +11,9 @@
 #ifndef __AST_G5_PHY_CONFIG_H
 #define __AST_G5_PHY_CONFIG_H
 
-#define CONFIG_ARCH_AST2500
 #define CONFIG_SYS_LOAD_ADDR		0x83000000
 
+#include <asm/arch/ast_g5_platform.h>
 #include <configs/ast-common.h>
 
 /* arm1176/start.S */

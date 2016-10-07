@@ -17,15 +17,9 @@
 #ifndef _AST_PLATFORM_H
 #define _AST_PLATFORM_H
 
-#include <asm/arch/aspeed.h>
-
-#define AST_PLL_25MHZ			25000000
-#define AST_PLL_24MHZ			24000000
-#define AST_PLL_12MHZ			12000000
-
-#if defined(CONFIG_ARCH_AST2400)
+#if defined(CONFIG_TARGET_AST_G4)
 #include <asm/arch/ast2400_platform.h>
-#elif defined(AST_SOC_G5)
+#elif defined(CONFIG_TARGET_AST_G5)
 #include <asm/arch/ast_g5_platform.h>
 #else
 #err "No define for platform.h"

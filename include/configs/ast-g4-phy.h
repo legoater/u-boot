@@ -11,11 +11,11 @@
 #ifndef __AST_G4_NCSI_CONFIG_H
 #define __AST_G4_NCSI_CONFIG_H
 
-#define CONFIG_ARCH_AST2400
 #define CONFIG_SYS_LOAD_ADDR		0x43000000
 
 #define CONFIG_MISC_INIT_R
 
+#include <asm/arch/ast2400_platform.h>
 #include <configs/ast-common.h>
 
 /* Ethernet */
