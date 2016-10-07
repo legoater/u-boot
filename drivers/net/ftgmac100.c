@@ -16,6 +16,7 @@
 #include <net.h>
 #include <asm/io.h>
 #include <linux/mii.h>
+#include <phy.h>
 
 #include <i2c.h>
 
@@ -306,7 +307,7 @@ static int ftgmac100_phy_init(struct eth_device *dev)
 	int i;
 
 	/* Check if the PHY is up to snuff... */
-	for (phy_addr = 0; phy_addr < CONFIG_PHY_MAX_ADDR; phy_addr++) {
+	for (phy_addr = 0; phy_addr < PHY_MAX_ADDR; phy_addr++) {
 
 		ftgmac100_phy_read(dev, phy_addr, MII_PHYSID1, &phy_id1);
 		ftgmac100_phy_read(dev, phy_addr, MII_PHYSID2, &phy_id2);

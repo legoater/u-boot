@@ -22,6 +22,5 @@
 /* Ethernet */
 #define CONFIG_HAS_ETH0
 #define CONFIG_HAS_ETH1
-#define CONFIG_PHY_MAX_ADDR		32
 
 #endif	/* __AST_G5_PHY_CONFIG_H */
