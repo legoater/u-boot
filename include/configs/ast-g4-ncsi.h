@@ -22,8 +22,5 @@
 #define CONFIG_LIB_RAND
 #define CONFIG_ASPEEDNIC
 
-/* platform.S settings */
-#define CONFIG_CPU_420			1
-#define CONFIG_DRAM_528			1
 
 #endif	/* __AST_G4_NCSI_CONFIG_H */
