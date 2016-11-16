@@ -40,3 +40,10 @@ int dram_init(void)
 
 	return 0;
 }
+
+#ifdef CONFIG_FTGMAC100
+int board_eth_init(bd_t *bd)
+{
+        return ftgmac100_initialize(bd);
+}
+#endif

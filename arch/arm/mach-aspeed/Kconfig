@@ -23,6 +23,16 @@ config AST_SPI_NOR
 	  Enable Aspeed SMC driver to access the SPI NOR flash of the
 	  BMC
 
+choice
+	prompt "Network configuration"
+	help
+	  Select Aspeed network configuration
+
+config ASPEED_NET_PHY
+	bool "Use a direct attached PHY"
+
+endchoice
+
 config AST_DISABLE_WDT2
 	bool "Disable second Watchdog"
 	default false
