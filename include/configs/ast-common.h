@@ -1,0 +1,97 @@
+/*
+ * Copyright (C) 2012-2020  ASPEED Technology Inc.
+ * Ryan Chen <ryan_chen@aspeedtech.com>
+ *
+ * Copyright 2016 IBM Corporation
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ */
+
+#ifndef __AST_COMMON_CONFIG_H
+#define __AST_COMMON_CONFIG_H
+
+#define CONFIG_ARCH_CPU_INIT
+
+#define CONFIG_MISC_INIT_R
+
+#undef CONFIG_CMD_IMLS
+#define CONFIG_SYS_NO_FLASH
+#define CONFIG_ENV_IS_NOWHERE
+
+/* Misc CPU related */
+#define CONFIG_CMDLINE_TAG		/* enable passing of ATAGs */
+#define CONFIG_SETUP_MEMORY_TAGS
+#define CONFIG_INITRD_TAG
+
+#define CONFIG_CMDLINE_EDITING		1
+
+/* Enable cache controller */
+#define CONFIG_SYS_DCACHE_OFF		1
+
+#define CONFIG_SYS_SDRAM_BASE		AST_DRAM_BASE
+#define CONFIG_SYS_INIT_RAM_ADDR	AST_SRAM_BASE
+#define CONFIG_SYS_INIT_RAM_SIZE	AST_SRAM_SIZE
+#define CONFIG_SYS_INIT_SP_OFFSET				\
+	(CONFIG_SYS_INIT_RAM_SIZE - GENERATED_GBL_DATA_SIZE)
+#define CONFIG_SYS_INIT_SP_ADDR					\
+	(CONFIG_SYS_INIT_RAM_ADDR + CONFIG_SYS_INIT_SP_OFFSET)
+
+#define CONFIG_NR_DRAM_BANKS		1
+
+#define CONFIG_SYS_TEXT_BASE		0x00000000
+
+#define CONFIG_SYS_MALLOC_LEN		(0x1000 + 4*1024*1024)
+
+#define CONFIG_TIMER_CLK_FREQ		(1*1000*1000)	/* external clk (1M) */
+
+/*
+ * NS16550 Configuration
+ */
+#define CONFIG_SYS_NS16550_SERIAL
+#define CONFIG_SYS_NS16550_REG_SIZE		(-4)
+#define CONFIG_SYS_NS16550_CLK			24000000
+#define CONFIG_SYS_NS16550_COM1			AST_UART0_BASE
+#define CONFIG_SYS_LOADS_BAUD_CHANGE
+#define CONFIG_SERIAL1				1
+#define CONFIG_CONS_INDEX			1
+#define CONFIG_BAUDRATE				115200
+
+/*
+ * BOOTP options
+ */
+#define CONFIG_BOOTP_BOOTFILESIZE
+#define CONFIG_BOOTP_BOOTPATH
+#define CONFIG_BOOTP_GATEWAY
+#define CONFIG_BOOTP_HOSTNAME
+#define CONFIG_BOOTP_SUBNETMASK
+
+/*
+ * Environment Config
+ */
+#define CONFIG_BOOTDELAY		2
+
+#define CONFIG_ENV_OFFSET		0x60000
+#define CONFIG_ENV_SIZE			0x20000
+
+/*
+ * Miscellaneous configurable options
+ */
+#define CONFIG_SYS_LONGHELP
+#define CONFIG_SYS_CBSIZE		256 /* Console I/O Buffer Size */
+#define CONFIG_SYS_PROMPT		"ast# "
+
+/* Print Buffer Size */
+#define CONFIG_SYS_PBSIZE		(CONFIG_SYS_CBSIZE + \
+					 sizeof(CONFIG_SYS_PROMPT) + 16)
+#define CONFIG_SYS_MAXARGS		16
+#define CONFIG_SYS_BARGSIZE		CONFIG_SYS_CBSIZE
+
+/* Ethernet */
+#define CONFIG_HAS_ETH0
+#define CONFIG_HAS_ETH1
+
+#endif	/* __AST_COMMON_CONFIG_H */

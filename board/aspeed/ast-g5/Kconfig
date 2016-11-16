@@ -1,0 +1,24 @@
+if TARGET_AST_G5
+
+config SYS_ARCH
+	default "arm"
+
+config SYS_CPU
+	default "arm1176"
+
+config SYS_BOARD
+	default "ast-g5"
+
+config SYS_CONFIG_NAME
+	default "ast-g5"
+
+config DRAM_ECC
+	bool "Enable ECC function"
+	default n
+	help
+	  Enable ECC function on Aspeed SoC AST2500
+
+config DRAM_ECC_SIZE
+	default 0x10000000
+
+endif

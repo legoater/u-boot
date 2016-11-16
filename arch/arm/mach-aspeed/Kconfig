@@ -1,0 +1,34 @@
+if ARCH_ASPEED
+
+
+choice
+	prompt "Aspeed SoC select"
+	optional
+
+config TARGET_AST_G5
+       bool "Support Apseed fifth generation SoCs"
+       select CPU_ARM1176
+
+config TARGET_AST_G4
+       bool "Support Aspeed fourth generation SoCs"
+       select CPU_ARM926EJS
+
+endchoice
+
+config AST_DISABLE_WDT2
+	bool "Disable second Watchdog"
+	default false
+	help
+	  Disable Second Watchdog
+
+config SYS_VENDOR
+	default "aspeed"
+
+config SYS_SOC
+	default "aspeed"
+
+
+source "board/aspeed/ast-g5/Kconfig"
+source "board/aspeed/ast-g4/Kconfig"
+
+endif

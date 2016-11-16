@@ -130,6 +130,9 @@ choice
 	prompt "Target select"
 	default TARGET_HIKEY
 
+config ARCH_ASPEED
+       bool "Support Apseed SoCs"
+
 config ARCH_AT91
 	bool "Atmel AT91"
 
@@ -874,6 +877,8 @@ config TARGET_THUNDERX_88XX
 	select SYS_CACHE_SHIFT_7
 
 endchoice
+
+source "arch/arm/mach-aspeed/Kconfig"
 
 source "arch/arm/mach-at91/Kconfig"
 
