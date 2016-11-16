@@ -25,8 +25,12 @@ config AST_SPI_NOR
 
 choice
 	prompt "Network configuration"
+	default ASPEED_NET_NCSI
 	help
 	  Select Aspeed network configuration
+
+config ASPEED_NET_NCSI
+	bool  "Use a network controller attached via NSCI"
 
 config ASPEED_NET_PHY
 	bool "Use a direct attached PHY"

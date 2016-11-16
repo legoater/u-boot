@@ -73,3 +73,10 @@ int board_eth_init(bd_t *bd)
 	return ftgmac100_initialize(bd);
 }
 #endif
+
+#ifdef CONFIG_ASPEEDNIC
+int board_eth_init(bd_t *bd)
+{
+	return aspeednic_initialize(bd);
+}
+#endif

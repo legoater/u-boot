@@ -215,6 +215,14 @@ config PIC32_ETH
 	  This driver implements 10/100 Mbps Ethernet and MAC layer for
 	  Microchip PIC32 microcontrollers.
 
+config ASPEEDNIC
+	bool "Aspeed ethernet support"
+	depends on ARCH_ASPEED
+	select PHYLIB
+	help
+	  Network support for the Aspeed ast2400 and ast2500 series network
+	  devices including NC-SI support.
+
 config FTGMAC100
 	bool "Faraday's FTGMAC100 Gigabit SoC Ethernet"
 	select PHYLIB
