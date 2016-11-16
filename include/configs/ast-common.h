@@ -18,10 +18,6 @@
 
 #define CONFIG_MISC_INIT_R
 
-#undef CONFIG_CMD_IMLS
-#define CONFIG_SYS_NO_FLASH
-#define CONFIG_ENV_IS_NOWHERE
-
 /* Misc CPU related */
 #define CONFIG_CMDLINE_TAG		/* enable passing of ATAGs */
 #define CONFIG_SETUP_MEMORY_TAGS
@@ -70,12 +66,31 @@
 #define CONFIG_BOOTP_SUBNETMASK
 
 /*
+ * Flash Config
+ */
+ #define CONFIG_BOOTDELAY		2
+#define CONFIG_SYS_MAX_FLASH_BANKS 	1
+#define CONFIG_SYS_MAX_FLASH_SECT	(8192)	/* max number of
+						 * sectors on one chip */
+
+/*
  * Environment Config
  */
-#define CONFIG_BOOTDELAY		2
-
 #define CONFIG_ENV_OFFSET		0x60000
 #define CONFIG_ENV_SIZE			0x20000
+#define CONFIG_ENV_IS_IN_FLASH		1
+#define CONFIG_ENV_ADDR			(AST_FMC_CS0_BASE + 0x60000)
+
+#define CONFIG_BOOTDELAY		2
+#define CONFIG_BOOTARGS			"console=ttyS4,115200n8 root=/dev/ram rw"
+#define CONFIG_BOOTCOMMAND		"bootm 20080000 20300000"
+#define ASPEED_ENV_SETTINGS \
+	"verify=yes\0"	\
+	"spi_dma=yes\0" \
+	""
+#define CONFIG_EXTRA_ENV_SETTINGS ASPEED_ENV_SETTINGS
+
+#define CONFIG_ENV_OVERWRITE
 
 /*
  * Miscellaneous configurable options
