@@ -13,6 +13,7 @@
 	};
 
 	aliases {
+		spi0 = &fmc;
 		ethernet0 = &mac0;
 		ethernet1 = &mac1;
 	};
@@ -58,4 +59,15 @@
 
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_mac2link_default &pinctrl_mdio2_default>;
+};
+
+&fmc {
+	status = "okay";
+	flash@0 {
+		compatible = "spi-flash", "sst,w25q256";
+		status = "okay";
+		spi-max-frequency = <50000000>;
+		spi-tx-bus-width = <2>;
+		spi-rx-bus-width = <2>;
+	};
 };
