@@ -143,6 +143,18 @@ static ulong ast2500_clk_get_rate(struct clk *clk)
 			rate = rate / apb_div;
 		}
 		break;
+	case BCLK_HCLK:
+		{
+			ulong ahb_div = 1 + ((readl(&priv->scu->hwstrap)
+					      & SCU_HWSTRAP_AXIAHB_DIV_MASK)
+					     >> SCU_HWSTRAP_AXIAHB_DIV_SHIFT);
+			ulong axi_div = 2;
+
+			rate = ast2500_get_hpll_rate(
+				clkin, readl(&priv->scu->h_pll_param));
+			rate = rate / axi_div / ahb_div;
+		}
+		break;
 	case PCLK_UART1:
 		rate = ast2500_get_uart_clk_rate(priv->scu, 1);
 		break;
