@@ -17,6 +17,7 @@
 #include <phy_interface.h>
 
 #define PHY_FIXED_ID		0xa5a55a5a
+#define PHY_NCSI_ID		0xbeefcafe
 
 #define PHY_MAX_ADDR 32
 
