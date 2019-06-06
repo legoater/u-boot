@@ -1296,6 +1296,12 @@ config CMD_LINK_LOCAL
 	help
 	  Acquire a network IP address using the link-local protocol
 
+config CMD_NCSI
+	bool "ncsi"
+	depends on PHY_NCSI
+	help
+	  Configure the attached NIC via NC-SI
+
 endif
 
 config CMD_ETHSW
