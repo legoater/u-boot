@@ -17,6 +17,7 @@
 #define BCLK_MACCLK	103
 #define BCLK_SDCLK	104
 #define BCLK_ARMCLK	105
+#define BCLK_HCLK	106
 
 #define MCLK_DDR	201
 
