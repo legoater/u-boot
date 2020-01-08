@@ -17,6 +17,7 @@ obj-$(CONFIG_SOFT_SPI) += soft_spi_legacy.o
 endif
 
 obj-$(CONFIG_ALTERA_SPI) += altera_spi.o
+obj-$(CONFIG_ASPEED_SPI) += aspeed_spi.o
 obj-$(CONFIG_ATH79_SPI) += ath79_spi.o
 obj-$(CONFIG_ATMEL_QSPI) += atmel-quadspi.o
 obj-$(CONFIG_ATMEL_SPI) += atmel_spi.o
