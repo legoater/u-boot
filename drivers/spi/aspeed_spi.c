@@ -858,11 +858,197 @@ static const struct aspeed_spi_soc aspeed_spi_ast2500_spi = {
 	.timing_mask   = aspeed_spi_ast2500_timing_mask,
 };
 
+/*
+ * AST2600 definitions
+ */
+
+static int aspeed_spi_ast2600_timing_calibration(struct aspeed_spi_priv *priv)
+{
+	/* HCLK/5 .. HCLK/1 */
+	const u8 hclk_masks[] = { 13, 6, 14, 7, 15 };
+
+	u32 timing_reg = 0;
+	u32 checksum, gold_checksum;
+	int i, hcycle;
+
+	debug("Read timing calibration :\n");
+
+	/* Compute reference checksum at lowest freq HCLK/16 */
+	gold_checksum = aspeed_spi_read_checksum(priv, 0, 0);
+
+	/*
+	 * Set CE0 Control Register to FAST READ command mode. The
+	 * HCLK divisor will be set through the DMA Control Register.
+	 */
+	writel(CE_CTRL_CMD(0xb) | CE_CTRL_DUMMY(1) | CE_CTRL_FREADMODE,
+	       &priv->regs->ce_ctrl[0]);
+
+	/* Increase HCLK freq */
+	for (i = 0; i < ARRAY_SIZE(hclk_masks) - 1; i++) {
+		u32 hdiv = 5 - i;
+		u32 hshift = (hdiv - 2) * 8;
+		bool pass = false;
+		u8 delay;
+		u16 first_delay = 0;
+		u16 end_delay = 0;
+		u32 cal_tmp;
+		int delay_ns;
+
+		debug(" hdiv %d, hshift %d \n", hdiv, hshift);
+		if (priv->hclk_rate / hdiv > priv->max_hz) {
+			debug("skipping freq %ld\n", priv->hclk_rate / hdiv);
+			continue;
+			}
+
+		/* Try without the 4ns DI delay */
+		hcycle = delay = 0;
+		debug("** Dealy Disable ** \n");
+		checksum = aspeed_spi_read_checksum(priv, hclk_masks[i], delay);
+		pass = (checksum == gold_checksum);
+		debug(" HCLK/%d,  no DI delay, %d HCLK cycle : %s\n",
+				  hdiv, hcycle, pass ? "PASS" : "FAIL");
+
+		/* All good for this freq  */
+		if (pass)
+			goto next_div;
+
+		/* Increase HCLK cycles until read succeeds */
+		for (hcycle = 0; hcycle <= TIMING_DELAY_HCYCLE_MAX; hcycle++) {
+			/* Try first with a 4ns DI delay */
+			delay = TIMING_DELAY_DI_4NS | hcycle;
+			debug("** Delay Enable : hcycle %x ** \n", hcycle);
+			for (delay_ns = 0; delay_ns < 0xf; delay_ns++) {
+				delay |= (delay_ns << 4);
+				checksum = aspeed_spi_read_checksum(priv, hclk_masks[i],
+								    delay);
+				pass = (checksum == gold_checksum);
+				debug(" HCLK/%d, 4ns DI delay, %d HCLK cycle, %d delay_ns : %s\n",
+				      hdiv, hcycle, delay_ns, pass ? "PASS" : "FAIL");
+
+				/* Try again with more HCLK cycles */
+				if (!pass) {
+					if (!first_delay)
+						continue;
+					else {
+						end_delay = (hcycle << 4) | (delay_ns);
+						end_delay = end_delay - 1;
+						pass = 1;
+						debug("find end_delay %x %d %d\n",
+						      end_delay, hcycle, delay_ns);
+						break;
+					}
+				} else {
+					if (!first_delay) {
+						first_delay = (hcycle << 4) | delay_ns;
+						debug("find first_delay %x %d %d\n",
+						      first_delay, hcycle, delay_ns);
+					}
+					if (!end_delay)
+							pass = 0;
+				}
+			}
+
+			if (pass) {
+				cal_tmp = (first_delay + end_delay) / 2;
+				delay = TIMING_DELAY_DI_4NS |
+					((cal_tmp & 0xf) << 4) | (cal_tmp >> 4);
+				break;
+			}
+		}
+next_div:
+		if (pass) {
+			timing_reg &= ~(0xfu << hshift);
+			timing_reg |= delay << hshift;
+			debug("timing_reg %x, delay %x, hshift bit %d\n",timing_reg, delay, hshift);
+		}
+	}
+
+	debug("Read Timing Compensation set to 0x%08x\n", timing_reg);
+	writel(timing_reg, &priv->regs->timings);
+
+	/* Reset CE0 Control Register */
+	writel(0x0, &priv->regs->ce_ctrl[0]);
+
+	return 0;
+}
+
+static const struct aspeed_segment aspeed_spi_ast2600_fmc_segments[] = {
+	{ 0x00000000, 0x08000000 },
+	{ 0x08000000, 0x04000000 },
+	{ 0x0c000000, 0x04000000 },
+};
+
+static const struct aspeed_segment aspeed_spi_ast2600_spi_segments[] = {
+	{ 0x00000000, 0x08000000 },
+	{ 0x08000000, 0x08000000 },
+};
+
+static u32 aspeed_spi_ast2600_segment_reg(u32 start, u32 end)
+{
+	return ((start >> 16) & 0xffff) | ((end - 0x100000) & 0xffff0000);
+}
+
+static u32 aspeed_spi_ast2600_timing_mask(u32 div, u32 delay)
+{
+	return ((delay & 0xf) << 8) | ((div & 0xf) << 16);
+}
+
+static u32 aspeed_spi_ast2600_hclk_divisor(struct aspeed_spi_priv *priv,
+					   u32 max_hz)
+{
+	/* HCLK/1 ..	HCLK/16 */
+	const u8 hclk_masks[] = {
+		15, 7, 14, 6, 13, 5, 12, 4, 11, 3, 10, 2, 9, 1, 8, 0
+	};
+	u32 hclk_rate = priv->hclk_rate;
+	u8 base_div = 0;
+	u32 i, j;
+
+	for (j = 0; j < 0xf; j++) {
+		for (i = 0; i < ARRAY_SIZE(hclk_masks); i++) {
+			base_div = j * 16;
+			if (max_hz >= (hclk_rate / (i + 1 + base_div))) {
+				goto done;
+			}
+		}
+	}
+done:
+	debug("hclk=%d required=%d h_div %d, divisor is %d (mask %x) speed=%d\n",
+	      hclk_rate, max_hz, j, i + 1, hclk_masks[i],
+	      hclk_rate / (i + 1 + base_div));
+
+#define CE_G6_CTRL_CLOCK_FREQ(div)			\
+	((((div) & 0xf) << 8) | (((div) & 0xf0) << 20))
+
+	return CE_G6_CTRL_CLOCK_FREQ((j << 4) | hclk_masks[i]);
+}
+
+static const struct aspeed_spi_soc aspeed_spi_ast2600_fmc = {
+	.num_cs = 3,
+	.segments      = aspeed_spi_ast2600_fmc_segments,
+	.hclk_divisor  = aspeed_spi_ast2600_hclk_divisor,
+	.segment_reg   = aspeed_spi_ast2600_segment_reg,
+	.timing_mask   = aspeed_spi_ast2600_timing_mask,
+	.timing_calibration = aspeed_spi_ast2600_timing_calibration,
+};
+
+static const struct aspeed_spi_soc aspeed_spi_ast2600_spi = {
+	.num_cs = 2,
+	.segments      = aspeed_spi_ast2600_spi_segments,
+	.hclk_divisor  = aspeed_spi_ast2600_hclk_divisor,
+	.segment_reg   = aspeed_spi_ast2600_segment_reg,
+	.timing_mask   = aspeed_spi_ast2600_timing_mask,
+};
+
 static const struct udevice_id aspeed_spi_ids[] = {
 	{ .compatible = "aspeed,ast2500-fmc",
 	  .data = (ulong)&aspeed_spi_ast2500_fmc, },
 	{ .compatible = "aspeed,ast2500-spi",
 	  .data = (ulong)&aspeed_spi_ast2500_spi, },
+	{ .compatible = "aspeed,ast2600-fmc",
+	  .data = (ulong)&aspeed_spi_ast2600_fmc, },
+	{ .compatible = "aspeed,ast2600-spi",
+	  .data = (ulong)&aspeed_spi_ast2600_spi, },
 	{ }
 };
 
