@@ -271,8 +271,18 @@ static ssize_t aspeed_spi_write_user(struct aspeed_spi_priv *priv,
 {
 	aspeed_spi_start_user(priv, flash);
 
-	/* cmd buffer = cmd + addr */
+	if (flash->iomode == CE_CTRL_IO_QPI_DATA)
+		writel(flash->ce_ctrl_user | flash->iomode,
+		       &priv->regs->ce_ctrl[flash->cs]);
+
+	/* cmd buffer = cmd + addr : normally cmd is use signle mode*/
 	aspeed_spi_send_cmd_addr(priv, flash, cmdbuf, cmdlen);
+
+	/* data will use io mode */
+	if (flash->iomode == CE_CTRL_IO_QUAD_DATA)
+		writel(flash->ce_ctrl_user | flash->iomode,
+		       &priv->regs->ce_ctrl[flash->cs]);
+
 	aspeed_spi_write_to_ahb(flash->ahb_base, write_buf, len);
 
 	aspeed_spi_stop_user(priv, flash);
@@ -493,6 +503,13 @@ static int aspeed_spi_flash_init(struct aspeed_spi_priv *priv,
 	if (slave->mode & (SPI_RX_DUAL | SPI_TX_DUAL)) {
 		debug("CS%u: setting dual data mode\n", flash->cs);
 		flash->iomode = CE_CTRL_IO_DUAL_DATA;
+		flash->spi->read_opcode = SPINOR_OP_READ_1_1_2; /* TODO */
+	} else if (slave->mode & (SPI_RX_QUAD | SPI_TX_QUAD)) {
+		debug("CS%u: setting quad data mode\n", flash->cs);
+		flash->iomode = CE_CTRL_IO_QUAD_DATA;
+		flash->spi->read_opcode = SPINOR_OP_READ_1_4_4;  /* TODO */
+	} else {
+		debug("CS%u: using normal IO mode\n", flash->cs);
 	}
 
 	flash->ce_ctrl_fread = read_hclk |
@@ -553,11 +570,12 @@ static int aspeed_spi_set_mode(struct udevice *bus, uint mode)
 {
 	debug("%s: setting mode to %x\n", bus->name, mode);
 
+#ifndef CONFIG_ASPEED_AST2600
 	if (mode & (SPI_RX_QUAD | SPI_TX_QUAD)) {
 		pr_err("%s invalid QUAD IO mode\n", bus->name);
 		return -EINVAL;
 	}
-
+#endif
 	/* The CE Control Register is set in claim_bus() */
 	return 0;
 }

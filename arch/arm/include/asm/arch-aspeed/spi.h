@@ -32,9 +32,12 @@
 #define INTR_CTRL_WRITE_PROTECT_EN	BIT(1)
 
 /* CEx Control Register */
-#define CE_CTRL_IO_MODE_MASK		GENMASK(30, 28)
+#define CE_CTRL_IO_MODE_MASK		GENMASK(31, 28)
+#define CE_CTRL_IO_QPI_DATA		BIT(31)
 #define CE_CTRL_IO_DUAL_DATA		BIT(29)
 #define CE_CTRL_IO_DUAL_ADDR_DATA	(BIT(29) | BIT(28))
+#define CE_CTRL_IO_QUAD_DATA		BIT(30)
+#define CE_CTRL_IO_QUAD_ADDR_DATA	(BIT(30) | BIT(28))
 #define CE_CTRL_CMD_SHIFT		16
 #define CE_CTRL_CMD_MASK		0xff
 #define CE_CTRL_CMD(cmd)					\
