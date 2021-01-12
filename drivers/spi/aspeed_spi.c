@@ -208,6 +208,17 @@ static int aspeed_spi_write_reg(struct aspeed_spi_priv *priv,
 	aspeed_spi_write_to_ahb(flash->ahb_base, write_buf, len);
 	aspeed_spi_stop_user(priv, flash);
 
+	/* TODO: fix 4BYTE mode */
+	switch(opcode) {
+	case SPINOR_OP_EN4B:
+		writel(readl(&priv->regs->ctrl) | BIT(flash->cs),
+		       &priv->regs->ctrl);
+		break;
+	case SPINOR_OP_EX4B:
+		writel(readl(&priv->regs->ctrl) & ~BIT(flash->cs),
+		       &priv->regs->ctrl);
+		break;
+	}
 	return 0;
 }
 
@@ -524,7 +535,7 @@ static int aspeed_spi_flash_init(struct aspeed_spi_priv *priv,
 	/* Set the CE Control Register default (FAST READ) */
 	writel(flash->ce_ctrl_fread, &priv->regs->ce_ctrl[flash->cs]);
 
-	/* Enable 4BYTE addresses (No support in U-Boot yet) */
+	/* TODO: Enable 4BYTE addresses (No support in U-Boot yet) */
 	if (flash->spi->size >= 16 << 20)
 		aspeed_spi_flash_check_4b(priv, flash);
 
