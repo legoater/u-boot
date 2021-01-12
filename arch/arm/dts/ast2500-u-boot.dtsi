@@ -86,3 +86,15 @@
 &mac1 {
 	clocks = <&scu ASPEED_CLK_GATE_MAC1CLK>, <&scu ASPEED_CLK_D2PLL>;
 };
+
+&fmc {
+	clocks = <&scu ASPEED_CLK_AHB>;
+};
+
+&spi1 {
+	clocks = <&scu ASPEED_CLK_AHB>;
+};
+
+&spi2 {
+	clocks = <&scu ASPEED_CLK_AHB>;
+};
