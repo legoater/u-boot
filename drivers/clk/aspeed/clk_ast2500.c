@@ -145,6 +145,18 @@ static ulong ast2500_clk_get_rate(struct clk *clk)
 			rate = rate / apb_div;
 		}
 		break;
+	case ASPEED_CLK_AHB:
+		{
+			ulong ahb_div = 1 + ((readl(&priv->scu->hwstrap)
+					      & SCU_HWSTRAP_AXIAHB_DIV_MASK)
+					     >> SCU_HWSTRAP_AXIAHB_DIV_SHIFT);
+			ulong axi_div = 2;
+
+			rate = ast2500_get_hpll_rate(
+				clkin, readl(&priv->scu->h_pll_param));
+			rate = rate / axi_div / ahb_div;
+		}
+		break;
 	case ASPEED_CLK_SDIO:
 		{
 			ulong apb_div = 4 + 4 * ((readl(&priv->scu->clk_sel1)
